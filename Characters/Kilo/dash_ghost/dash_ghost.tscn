@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://caibk2cjm2nl"]
+
+[ext_resource type="Script" path="res://Characters/Kilo/dash_ghost/dash_ghost.gd" id="1_dm2m6"]
+[ext_resource type="Texture2D" uid="uid://2fx2be3ffyxk" path="res://Art/Characters/Kilo/formatting-Sheet.png" id="1_ixvrm"]
+
+[node name="DashGhost" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0.556863)
+show_behind_parent = true
+z_index = 1
+position = Vector2(0, -2)
+scale = Vector2(1, 1.56)
+texture = ExtResource("1_ixvrm")
+offset = Vector2(0, -6)
+hframes = 7
+vframes = 5
+frame = 8
+script = ExtResource("1_dm2m6")
+metadata/_edit_horizontal_guides_ = [-15.0]

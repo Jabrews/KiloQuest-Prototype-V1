@@ -1,0 +1,112 @@
+[gd_scene load_steps=15 format=3 uid="uid://o1vpi2yr6ak5"]
+
+[ext_resource type="Script" path="res://Characters/DarkBird/bird.gd" id="1_y10fn"]
+[ext_resource type="Texture2D" uid="uid://dtaabb5cxmqjo" path="res://Art/Characters/Normal Bird/single_frame-Sheet.png" id="2_r5ncy"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/Damageable.gd" id="3_t0lgn"]
+[ext_resource type="PackedScene" uid="uid://bfr557524yeii" path="res://Elements/Particles/Death Effect/cpu_particles_2d.tscn" id="4_ag38l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mk36n"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(0, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7uo1s"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(64, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qkkb5"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(128, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yvxo5"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(192, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdqc6"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(256, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exc28"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(320, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0p7w"]
+atlas = ExtResource("2_r5ncy")
+region = Rect2(384, 0, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lb31l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mk36n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7uo1s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qkkb5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yvxo5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdqc6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exc28")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g0p7w")
+}],
+"loop": true,
+"name": &"FLY",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ye475"]
+size = Vector2(16, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2y2y4"]
+size = Vector2(18, 10)
+
+[node name="Bird" type="CharacterBody2D"]
+scale = Vector2(1, 1.54937)
+collision_layer = 2
+script = ExtResource("1_y10fn")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -1)
+scale = Vector2(0.649094, 0.467378)
+sprite_frames = SubResource("SpriteFrames_lb31l")
+animation = &"FLY"
+autoplay = "FLY"
+frame_progress = 0.944391
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_ye475")
+
+[node name="Damageable" type="Node" parent="." node_paths=PackedStringArray("character", "queue_free_timer")]
+script = ExtResource("3_t0lgn")
+character = NodePath("..")
+health = 50
+death_particles = ExtResource("4_ag38l")
+queue_free_timer = NodePath("../QueueFreeTimer")
+
+[node name="Attack" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack"]
+modulate = Color(0.820193, 2.98411e-06, 0.443288, 1)
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_2y2y4")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(1, 0.5)
+
+[node name="QueueFreeTimer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
+[connection signal="body_entered" from="Attack" to="." method="_on_attack_body_entered"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

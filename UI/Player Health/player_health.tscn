@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://en5bty2fi5lg"]
+
+[ext_resource type="PackedScene" uid="uid://cmecup1lwex47" path="res://UI/Player Health/heart.tscn" id="1_0t35h"]
+[ext_resource type="Script" path="res://UI/Player Health/player_health.gd" id="1_du0w5"]
+
+[node name="PlayerHealth" type="Node2D"]
+script = ExtResource("1_du0w5")
+
+[node name="Heart" parent="." node_paths=PackedStringArray("player_health_manager") instance=ExtResource("1_0t35h")]
+position = Vector2(-0.992, 12.008)
+player_health_manager = NodePath("..")
+
+[node name="Heart2" parent="." node_paths=PackedStringArray("player_health_manager") instance=ExtResource("1_0t35h")]
+position = Vector2(24.008, 12.008)
+order_number = 2
+player_health_manager = NodePath("..")
+
+[node name="Heart3" parent="." node_paths=PackedStringArray("player_health_manager") instance=ExtResource("1_0t35h")]
+position = Vector2(49.008, 12.008)
+order_number = 3
+player_health_manager = NodePath("..")
+
+[node name="Heart4" parent="." node_paths=PackedStringArray("player_health_manager") instance=ExtResource("1_0t35h")]
+position = Vector2(74.008, 12.008)
+order_number = 4
+player_health_manager = NodePath("..")

@@ -1,0 +1,189 @@
+[gd_scene load_steps=19 format=3 uid="uid://bl0ctl5rpe128"]
+
+[ext_resource type="Script" path="res://Characters/FloorRat/Scripts/rat.gd" id="1_c0wfj"]
+[ext_resource type="Texture2D" uid="uid://bcdhkv6p2ti73" path="res://Art/Characters/Floor Rat/walk.png" id="2_d2ura"]
+[ext_resource type="Texture2D" uid="uid://kq4murded3dv" path="res://Art/Characters/Floor Rat/floor_rat_single_frame-Sheet.png" id="2_tiupp"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/EnemyStateMachine.gd" id="3_nxn7v"]
+[ext_resource type="Script" path="res://Characters/FloorRat/Idle.gd" id="4_whajk"]
+[ext_resource type="Script" path="res://Characters/FloorRat/Scripts/Hit.gd" id="5_qua0b"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/Damageable.gd" id="6_22hnf"]
+[ext_resource type="Script" path="res://Characters/FloorRat/Scripts/Animator.gd" id="6_eyrhn"]
+[ext_resource type="PackedScene" uid="uid://bfr557524yeii" path="res://Elements/Particles/Death Effect/cpu_particles_2d.tscn" id="7_btwiv"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/Knockback.gd" id="7_nar6p"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ro5k4"]
+atlas = ExtResource("2_tiupp")
+region = Rect2(0, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4m147"]
+atlas = ExtResource("2_d2ura")
+region = Rect2(0, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppyif"]
+atlas = ExtResource("2_d2ura")
+region = Rect2(64, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjs1x"]
+atlas = ExtResource("2_d2ura")
+region = Rect2(128, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yoghv"]
+atlas = ExtResource("2_d2ura")
+region = Rect2(192, 0, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jioyx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ro5k4")
+}],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4m147")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppyif")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjs1x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yoghv")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txud8"]
+size = Vector2(29.7251, 16.5062)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b3xrm"]
+size = Vector2(34.4186, 18)
+
+[node name="Rat" type="CharacterBody2D" node_paths=PackedStringArray("floor_ray", "wall_ray", "attack_hurtbox", "wall_collide_timer")]
+scale = Vector2(0.716789, 0.86049)
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_c0wfj")
+floor_ray = NodePath("FloorRay")
+wall_ray = NodePath("WallRay")
+attack_hurtbox = NodePath("Attack")
+wall_collide_timer = NodePath("WallCollideTurnTimer")
+speed = 40
+knockback_distance = 1000
+gravity = 10
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-15.0127, -0.406715)
+scale = Vector2(0.843354, 0.72458)
+sprite_frames = SubResource("SpriteFrames_jioyx")
+animation = &"hit"
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-13.2981, 0.253093)
+shape = SubResource("RectangleShape2D_txud8")
+
+[node name="EnemyStateMachine" type="Node" parent="." node_paths=PackedStringArray("enemy", "current_state")]
+script = ExtResource("3_nxn7v")
+enemy = NodePath("..")
+current_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("attack_area", "damage_re_apply", "delay_after_attacking", "reset_hit_back_bounce_timer", "character", "animator", "knockback")]
+script = ExtResource("4_whajk")
+attack_area = NodePath("../../Attack")
+damage = 25
+damage_re_apply = NodePath("../../DamageReapply")
+delay_after_attacking = NodePath("../../DelayAfterAttackingTimer")
+reset_hit_back_bounce_timer = NodePath("../../ResetBounceBackTimer")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+knockback = NodePath("../../Knockback")
+
+[node name="Hit" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("return_from_hit_state_timer", "idle_state", "character", "animator")]
+script = ExtResource("5_qua0b")
+return_from_hit_state_timer = NodePath("../../ReturnFromHitStateTimer")
+idle_state = NodePath("../Idle")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+
+[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("animated_sprite_2d", "return_from_hit_state_timer")]
+script = ExtResource("6_eyrhn")
+animated_sprite_2d = NodePath("../Sprite2D")
+return_from_hit_state_timer = NodePath("../ReturnFromHitStateTimer")
+
+[node name="queue_free_timer2" type="Timer" parent="."]
+wait_time = 0.35
+one_shot = true
+
+[node name="Damageable" type="Node" parent="." node_paths=PackedStringArray("character", "enemy_state_machine", "hit_state", "knockback", "queue_free_timer")]
+script = ExtResource("6_22hnf")
+character = NodePath("..")
+health = 100
+enemy_state_machine = NodePath("../EnemyStateMachine")
+has_hit_state = true
+hit_state = NodePath("../EnemyStateMachine/Hit")
+has_knockback_node = true
+knockback = NodePath("../Knockback")
+has_apply_knockback_function = true
+death_particles = ExtResource("7_btwiv")
+queue_free_timer = NodePath("../queue_free_timer2")
+
+[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter")]
+script = ExtResource("7_nar6p")
+charcter = NodePath("..")
+
+[node name="Attack" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack"]
+modulate = Color(0.819608, 0, 0.443137, 1)
+position = Vector2(-14.0803, 1)
+shape = SubResource("RectangleShape2D_b3xrm")
+
+[node name="ResetBounceBackTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="ReturnFromHitStateTimer" type="Timer" parent="."]
+wait_time = 0.7
+one_shot = true
+
+[node name="DamageReapply" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="DelayAfterAttackingTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-11.5, 1)
+scale = Vector2(2.15, 0.9)
+
+[node name="WallCollideTurnTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="WallRay" type="RayCast2D" parent="."]
+position = Vector2(-26.5962, 0)
+scale = Vector2(0.856477, 1)
+target_position = Vector2(-7.30659, 0)
+collision_mask = 4
+collide_with_areas = true
+
+[node name="FloorRay" type="RayCast2D" parent="."]
+position = Vector2(-28.1607, 0)
+target_position = Vector2(0, 11)
+collision_mask = 4
+
+[connection signal="body_entered" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_entered"]
+[connection signal="body_exited" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_exited"]
+[connection signal="timeout" from="ReturnFromHitStateTimer" to="EnemyStateMachine/Hit" method="_on_return_from_hit_state_timer_timeout"]
+[connection signal="timeout" from="DamageReapply" to="EnemyStateMachine/Idle" method="_on_damage_reapply_timeout"]
+[connection signal="timeout" from="DelayAfterAttackingTimer" to="EnemyStateMachine/Idle" method="_on_delay_after_attacking_timer_timeout"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]

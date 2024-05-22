@@ -1,0 +1,91 @@
+[gd_scene load_steps=8 format=3 uid="uid://bte2lkl6x0bxw"]
+
+[ext_resource type="Script" path="res://Elements/Menu/MainMenu/main_menu.gd" id="1_pm70t"]
+[ext_resource type="PackedScene" uid="uid://d2ftljyvbmntn" path="res://Elements/Menu/OptionMenu/options.tscn" id="2_fpovp"]
+[ext_resource type="PackedScene" uid="uid://11wm0vxalxg7" path="res://Level/test_level.tscn" id="2_wxrdn"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_nts01"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2s0lj"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_nts01")
+
+[sub_resource type="SystemFont" id="SystemFont_4187y"]
+font_names = PackedStringArray("Comic Sans MS")
+
+[sub_resource type="SystemFont" id="SystemFont_1b8uq"]
+font_names = PackedStringArray("Comic Sans MS")
+
+[node name="Main_Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pm70t")
+first_level = ExtResource("2_wxrdn")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 0.67, 0.813, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("NoiseTexture2D_2s0lj")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Seperator" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = SubResource("SystemFont_4187y")
+theme_override_font_sizes/font_size = 25
+text = "KILO QUEST
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="start_game" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_1b8uq")
+text = "Start Game"
+
+[node name="load_level" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_1b8uq")
+text = "Load Level
+"
+
+[node name="options" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_1b8uq")
+text = "Options
+"
+
+[node name="Options" parent="." instance=ExtResource("2_fpovp")]
+visible = false
+layout_mode = 1

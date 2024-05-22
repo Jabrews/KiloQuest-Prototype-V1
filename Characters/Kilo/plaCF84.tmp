@@ -1,0 +1,429 @@
+[gd_scene load_steps=46 format=3 uid="uid://bf06y7nmuu1qv"]
+
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/player.gd" id="1_rwiu1"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/Animator.gd" id="2_fkbxp"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/StateRefrenceNode.gd" id="3_a1qum"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/CharcterStateMachine.gd" id="3_qsmir"]
+[ext_resource type="Texture2D" uid="uid://2fx2be3ffyxk" path="res://Art/Characters/Kilo/formatting-Sheet.png" id="4_xbtxc"]
+[ext_resource type="PackedScene" uid="uid://caibk2cjm2nl" path="res://Characters/Kilo/dash_ghost/dash_ghost.tscn" id="5_4kk1c"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/GroundState.gd" id="5_tinw6"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/AirState.gd" id="6_5hydu"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/DashState.gd" id="6_tg2ks"]
+[ext_resource type="Script" path="res://UI/State Label/State_label.gd" id="7_hoo27"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/FloorAttack.gd" id="10_250lg"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/AirAttack.gd" id="10_mfwah"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/Sword.gd" id="11_0njft"]
+[ext_resource type="Script" path="res://Characters/Kilo/Scripts/Sword2.gd" id="13_bh4wi"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/Knockback.gd" id="15_u7e6l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0p4y1"]
+size = Vector2(102, 191)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jh5t0"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(192, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i1bdv"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(0, 128, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a0epl"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 128, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pkqo"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(128, 128, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x2dbt"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jrf4s"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(128, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7spe"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(192, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8q476"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(256, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nx0nc"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(320, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1cpsx"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(384, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cuilf"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcu2c"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(128, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dtp1"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(192, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7rf1"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(0, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wm8xe"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8151"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(320, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohlrs"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(384, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e34p7"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(0, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qfn2x"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0mt4u"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(128, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2lssv"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(0, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdoyg"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(64, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y6ben"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(128, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nwgjk"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(192, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a14lv"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(256, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dinlp"]
+atlas = ExtResource("4_xbtxc")
+region = Rect2(320, 32, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qebns"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jh5t0")
+}],
+"loop": false,
+"name": &"air",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i1bdv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a0epl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pkqo")
+}],
+"loop": false,
+"name": &"air_attack",
+"speed": 6.7
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x2dbt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jrf4s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q7spe")
+}],
+"loop": false,
+"name": &"attack1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8q476")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nx0nc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1cpsx")
+}],
+"loop": false,
+"name": &"attack2",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cuilf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gcu2c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1dtp1")
+}],
+"loop": false,
+"name": &"double_jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v7rf1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wm8xe")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8151")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohlrs")
+}],
+"loop": false,
+"name": &"jump_end",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e34p7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qfn2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0mt4u")
+}],
+"loop": false,
+"name": &"jump_start",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2lssv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdoyg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y6ben")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nwgjk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a14lv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dinlp")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r2qt6"]
+size = Vector2(18.1081, 7.15962)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0ubxm"]
+size = Vector2(8.98649, 22.2858)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("charcter_state_machine", "can_get_hit_timer", "dash_cooldown_timer", "reg_attack", "poke_attack", "hitbox", "knockback") groups=["player"]]
+collision_mask = 4
+script = ExtResource("1_rwiu1")
+speed = 120.0
+jump_height = 30.0
+jump_time_to_peak = 0.3
+jump_time_to_descent = 0.4
+charcter_state_machine = NodePath("CharcterStateMachine")
+can_get_hit_timer = NodePath("Timers/HitStateTimer")
+dash_cooldown_timer = NodePath("Timers/DashCooldown")
+reg_attack = NodePath("RegularAttack")
+poke_attack = NodePath("PokeAttack")
+hitbox = NodePath("hitbox")
+hit_knockback_force = 400
+knockback = NodePath("Knockback")
+
+[node name="hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(-29, -33.5)
+shape = SubResource("RectangleShape2D_0p4y1")
+
+[node name="MainAnim" type="AnimatedSprite2D" parent="."]
+position = Vector2(-11, -60)
+scale = Vector2(6.75187, 7.6175)
+sprite_frames = SubResource("SpriteFrames_qebns")
+animation = &"attack1"
+
+[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("StateRefrence", "player_movement", "main_anim")]
+script = ExtResource("2_fkbxp")
+StateRefrence = NodePath("../StateRefrence")
+player_movement = NodePath("..")
+main_anim = NodePath("../MainAnim")
+
+[node name="StateRefrence" type="Node" parent="." node_paths=PackedStringArray("ground_state", "air_state", "dash_state", "floor_attack_state", "air_attack_state")]
+script = ExtResource("3_a1qum")
+ground_state = NodePath("../CharcterStateMachine/Ground")
+air_state = NodePath("../CharcterStateMachine/Air")
+dash_state = NodePath("../CharcterStateMachine/Dash")
+floor_attack_state = NodePath("../CharcterStateMachine/FloorAttack")
+air_attack_state = NodePath("../CharcterStateMachine/AirAttack")
+
+[node name="CharcterStateMachine" type="Node" parent="." node_paths=PackedStringArray("character", "current_state")]
+script = ExtResource("3_qsmir")
+character = NodePath("..")
+current_state = NodePath("Ground")
+
+[node name="Ground" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("jump_start_timer", "character", "animator", "StateRefrence")]
+script = ExtResource("5_tinw6")
+jump_start_timer = NodePath("../../Timers/JumpStart")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+can_move = true
+StateRefrence = NodePath("../../StateRefrence")
+
+[node name="Air" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("double_jump_duration_timer", "character", "animator", "StateRefrence")]
+script = ExtResource("6_5hydu")
+double_jump_duration_timer = NodePath("../../Timers/DoubleJumpTimer")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+can_move = true
+StateRefrence = NodePath("../../StateRefrence")
+
+[node name="Dash" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("dash_distance_timer", "dash_cooldown_timer", "ghost_timer", "character", "animator", "StateRefrence")]
+script = ExtResource("6_tg2ks")
+ghost_node = ExtResource("5_4kk1c")
+dash_force = 10.0
+dash_distance_timer = NodePath("../../Timers/DashDistanceTimer")
+dash_cooldown_timer = NodePath("../../Timers/DashCooldown")
+ghost_timer = NodePath("../../Timers/GhostTimer")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+StateRefrence = NodePath("../../StateRefrence")
+
+[node name="FloorAttack" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("reg_attack", "poke_attack", "attack_duration_timer", "character", "animator", "StateRefrence")]
+script = ExtResource("10_250lg")
+reg_attack = NodePath("../../RegularAttack")
+poke_attack = NodePath("../../PokeAttack")
+attack_duration_timer = NodePath("../../Timers/AttackDuration")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+StateRefrence = NodePath("../../StateRefrence")
+
+[node name="AirAttack" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("reg_attack", "character", "animator", "StateRefrence")]
+script = ExtResource("10_mfwah")
+reg_attack = NodePath("../../RegularAttack")
+character = NodePath("../..")
+animator = NodePath("../../Animator")
+can_move = true
+StateRefrence = NodePath("../../StateRefrence")
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="DoubleJumpTimer" type="Timer" parent="Timers"]
+wait_time = 0.05
+one_shot = true
+
+[node name="DashDistanceTimer" type="Timer" parent="Timers"]
+wait_time = 0.3
+
+[node name="GhostTimer" type="Timer" parent="Timers"]
+wait_time = 0.06
+
+[node name="DashCooldown" type="Timer" parent="Timers"]
+wait_time = 2.0
+one_shot = true
+
+[node name="JumpStart" type="Timer" parent="Timers"]
+wait_time = 0.07
+one_shot = true
+
+[node name="AttackStart" type="Timer" parent="Timers"]
+wait_time = 0.3
+one_shot = true
+
+[node name="AttackDuration" type="Timer" parent="Timers"]
+wait_time = 0.3
+one_shot = true
+
+[node name="HitStateTimer" type="Timer" parent="Timers"]
+wait_time = 2.0
+one_shot = true
+
+[node name="PokeAttack" type="Area2D" parent="." node_paths=PackedStringArray("charcter", "knockback")]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+script = ExtResource("13_bh4wi")
+damage = 70
+charcter = NodePath("..")
+knockback = NodePath("../Knockback")
+knockback_force = 500
+sword_knockback_force = 2300
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PokeAttack"]
+position = Vector2(93, 3)
+scale = Vector2(7.4, 8.52)
+shape = SubResource("RectangleShape2D_r2qt6")
+
+[node name="RegularAttack" type="Area2D" parent="." node_paths=PackedStringArray("charcter", "knockback")]
+position = Vector2(22, -73)
+scale = Vector2(7.4, 8.52)
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+script = ExtResource("11_0njft")
+damage = 50
+charcter = NodePath("..")
+knockback = NodePath("../Knockback")
+knockback_force = 500
+sword_knockback_force = 2000
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RegularAttack"]
+position = Vector2(4.96621, 4.68749)
+shape = SubResource("RectangleShape2D_0ubxm")
+
+[node name="Label" type="Label" parent="." node_paths=PackedStringArray("player_state_machine")]
+offset_left = -73.0
+offset_top = -199.0
+offset_right = 54.0
+offset_bottom = -127.0
+script = ExtResource("7_hoo27")
+player_state_machine = NodePath("../CharcterStateMachine")
+
+[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter")]
+script = ExtResource("15_u7e6l")
+charcter = NodePath("..")
+
+[connection signal="animation_finished" from="MainAnim" to="CharcterStateMachine/FloorAttack" method="_on_main_anim_animation_finished"]
+[connection signal="timeout" from="Timers/DashCooldown" to="." method="_on_dash_cooldown_timeout"]
+[connection signal="timeout" from="Timers/JumpStart" to="CharcterStateMachine/Ground" method="_on_jump_start_timeout"]
+[connection signal="timeout" from="Timers/HitStateTimer" to="." method="_on_hit_state_timer_timeout"]
+[connection signal="body_entered" from="PokeAttack" to="PokeAttack" method="_on_body_entered"]
+[connection signal="body_entered" from="RegularAttack" to="RegularAttack" method="_on_body_entered"]

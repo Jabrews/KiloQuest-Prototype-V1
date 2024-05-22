@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfr557524yeii"]
+
+[ext_resource type="Script" path="res://Elements/Particles/Death Effect/cpu_particles_2d.gd" id="1_x3ipo"]
+
+[sub_resource type="Curve" id="Curve_q048c"]
+_data = [Vector2(0.0393258, 0.615385), 0.0, 0.0, 0, 0, Vector2(0.494382, 0.791209), 0.0, 0.0, 0, 0, Vector2(0.983146, 0.571429), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_yqw3r"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+z_index = 1
+emitting = false
+amount = 10
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 70
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector2(0, 0)
+spread = 171.67
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 50.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+scale_amount_curve = SubResource("Curve_q048c")
+color_initial_ramp = SubResource("Gradient_yqw3r")
+script = ExtResource("1_x3ipo")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

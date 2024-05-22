@@ -1,0 +1,105 @@
+[gd_scene load_steps=13 format=3 uid="uid://bfoejhahywguo"]
+
+[ext_resource type="Texture2D" uid="uid://dt536n2yjmx0m" path="res://Art/Characters/Dark Knight/Iteration Period/color_refrence.png" id="1_dwllo"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/Damageable.gd" id="2_nj7rg"]
+[ext_resource type="Script" path="res://Characters/Reusable Scripts/EnemyStateMachine.gd" id="3_awf83"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Passive.gd" id="4_ipjli"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Aggresive.gd" id="5_upl2t"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Hit.gd" id="6_eyj7y"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Attack.gd" id="7_1cwv4"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Label.gd" id="8_kxisq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2357"]
+size = Vector2(23, 36)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_roj3x"]
+radius = 132.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4vtgi"]
+radius = 107.168
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i78ok"]
+size = Vector2(23, 36)
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2.5, -6)
+shape = SubResource("RectangleShape2D_t2357")
+
+[node name="AggroRange" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRange"]
+position = Vector2(-2, -6)
+shape = SubResource("CircleShape2D_roj3x")
+
+[node name="AggroStart" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroStart"]
+shape = SubResource("CircleShape2D_4vtgi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
+scale = Vector2(1.10262, 1.12169)
+texture = ExtResource("1_dwllo")
+
+[node name="Animator" type="Node" parent="."]
+
+[node name="Damageable" type="Node" parent="."]
+script = ExtResource("2_nj7rg")
+
+[node name="Poke" type="Area2D" parent="."]
+position = Vector2(-220, -148)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Poke"]
+position = Vector2(217.5, 142)
+shape = SubResource("RectangleShape2D_i78ok")
+
+[node name="EnemyStateMachine" type="Node2D" parent="." node_paths=PackedStringArray("enemy", "current_state")]
+script = ExtResource("3_awf83")
+enemy = NodePath("..")
+current_state = NodePath("Passive")
+
+[node name="Passive" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("character")]
+script = ExtResource("4_ipjli")
+character = NodePath("../..")
+
+[node name="Aggresive" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("character")]
+script = ExtResource("5_upl2t")
+character = NodePath("../..")
+
+[node name="Hit" type="Node" parent="EnemyStateMachine"]
+script = ExtResource("6_eyj7y")
+
+[node name="Attack" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("character")]
+script = ExtResource("7_1cwv4")
+character = NodePath("../..")
+
+[node name="Label" type="Label" parent="." node_paths=PackedStringArray("enemy_state_machine")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -42.0
+offset_right = 17.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+script = ExtResource("8_kxisq")
+enemy_state_machine = NodePath("../EnemyStateMachine")
+
+[node name="recalculate" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+debug_enabled = true
+debug_path_custom_line_width = 1.58

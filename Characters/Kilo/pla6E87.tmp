@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://bf06y7nmuu1qv"]
+
+[ext_resource type="Texture2D" uid="uid://cdihplcxlw21l" path="res://icon.svg" id="1_i7asi"]
+[ext_resource type="Script" path="res://Characters/Kilo/player.gd" id="1_rwiu1"]
+[ext_resource type="Script" path="res://Characters/CharcterStateMachine.gd" id="3_qsmir"]
+[ext_resource type="PackedScene" uid="uid://dl2jvsap6c82o" path="res://Characters/Kilo/dash_ghost/dash_ghost.tscn" id="5_4kk1c"]
+[ext_resource type="Script" path="res://Characters/Kilo/GroundState.gd" id="5_tinw6"]
+[ext_resource type="Script" path="res://Characters/Kilo/AirState.gd" id="6_5hydu"]
+[ext_resource type="Script" path="res://Characters/Kilo/DashState.gd" id="6_tg2ks"]
+[ext_resource type="Script" path="res://UI/State Label/State_label.gd" id="7_hoo27"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhr6f"]
+size = Vector2(131, 126)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("charcter_state_machine")]
+script = ExtResource("1_rwiu1")
+jump_height = 150.0
+jump_time_to_peak = 0.5
+jump_time_to_descent = 0.35
+charcter_state_machine = NodePath("CharcterStateMachine")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.5, 1)
+shape = SubResource("RectangleShape2D_lhr6f")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.819608, 0, 0.392157, 1)
+texture = ExtResource("1_i7asi")
+
+[node name="CharcterStateMachine" type="Node" parent="." node_paths=PackedStringArray("character", "current_state")]
+script = ExtResource("3_qsmir")
+character = NodePath("..")
+current_state = NodePath("Ground")
+
+[node name="Ground" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("air_state", "dash_state", "attack_state", "character")]
+script = ExtResource("5_tinw6")
+air_state = NodePath("../Air")
+dash_state = NodePath("../Dash")
+attack_state = NodePath("../Attack")
+character = NodePath("../..")
+can_move = true
+
+[node name="Air" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("ground_state", "character")]
+script = ExtResource("6_5hydu")
+ground_state = NodePath("../Ground")
+character = NodePath("../..")
+can_move = true
+
+[node name="Dash" type="Node" parent="CharcterStateMachine" node_paths=PackedStringArray("ghost_timer", "ground_state")]
+script = ExtResource("6_tg2ks")
+ghost_node = ExtResource("5_4kk1c")
+ghost_timer = NodePath("../GhostTimer")
+ground_state = NodePath("../Ground")
+
+[node name="Attack" type="Node" parent="CharcterStateMachine"]
+
+[node name="GhostTimer" type="Timer" parent="CharcterStateMachine"]
+wait_time = 0.15
+
+[node name="State_label" type="Label" parent="." node_paths=PackedStringArray("player_state_machine")]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("7_hoo27")
+player_state_machine = NodePath("../CharcterStateMachine")
+
+[connection signal="timeout" from="CharcterStateMachine/GhostTimer" to="CharcterStateMachine/Ground" method="_on_ghost_timer_timeout"]

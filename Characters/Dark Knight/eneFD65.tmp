@@ -1,0 +1,113 @@
+[gd_scene load_steps=13 format=3 uid="uid://bfoejhahywguo"]
+
+[ext_resource type="Texture2D" uid="uid://dt536n2yjmx0m" path="res://Art/Characters/Dark Knight/Iteration Period/color_refrence.png" id="1_o2dmv"]
+[ext_resource type="Script" path="res://Characters/Enemy Reusable Scripts/Damageable.gd" id="2_gg3qr"]
+[ext_resource type="Script" path="res://Characters/Enemy Reusable Scripts/EnemyStateMachine.gd" id="3_p36s5"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Passive.gd" id="4_b1575"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Aggresive.gd" id="5_mn8is"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Hit.gd" id="6_tfqlg"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Label.gd" id="7_4h8i6"]
+[ext_resource type="Script" path="res://Characters/Dark Knight/Scripts/Attack.gd" id="7_44oil"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2357"]
+size = Vector2(23, 36)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_roj3x"]
+radius = 132.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_flcxq"]
+radius = 102.078
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i78ok"]
+size = Vector2(23, 36)
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+z_index = 1
+collision_layer = 2
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2.5, -6)
+shape = SubResource("RectangleShape2D_t2357")
+
+[node name="AggroRange" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRange"]
+position = Vector2(-2, -6)
+shape = SubResource("CircleShape2D_roj3x")
+
+[node name="AggroStart" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroStart"]
+shape = SubResource("CircleShape2D_flcxq")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
+scale = Vector2(1.10262, 1.12169)
+texture = ExtResource("1_o2dmv")
+
+[node name="Animator" type="Node" parent="."]
+
+[node name="Damageable" type="Node" parent="."]
+script = ExtResource("2_gg3qr")
+
+[node name="Poke" type="Area2D" parent="."]
+position = Vector2(-220, -148)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Poke"]
+position = Vector2(217.5, 142)
+shape = SubResource("RectangleShape2D_i78ok")
+
+[node name="EnemyStateMachine" type="Node" parent="." node_paths=PackedStringArray("enemy", "current_state")]
+script = ExtResource("3_p36s5")
+enemy = NodePath("..")
+current_state = NodePath("Passive")
+
+[node name="Passive" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("nav_agent", "aggro_start_range", "agressive_state", "character")]
+script = ExtResource("4_b1575")
+nav_agent = NodePath("../../NavigationAgent2D")
+aggro_start_range = NodePath("../../AggroStart")
+agressive_state = NodePath("../Aggresive")
+character = NodePath("../..")
+
+[node name="Aggresive" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("passive_state", "aggro_range", "nav_agent", "re_calc", "character")]
+script = ExtResource("5_mn8is")
+passive_state = NodePath("../Passive")
+aggro_range = NodePath("../../AggroRange")
+nav_agent = NodePath("../../NavigationAgent2D")
+re_calc = NodePath("../../recalculate")
+character = NodePath("../..")
+
+[node name="Hit" type="Node" parent="EnemyStateMachine"]
+script = ExtResource("6_tfqlg")
+
+[node name="Attack" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("character")]
+script = ExtResource("7_44oil")
+character = NodePath("../..")
+
+[node name="Label" type="Label" parent="." node_paths=PackedStringArray("enemy_state_machine")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -42.0
+offset_right = 17.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+script = ExtResource("7_4h8i6")
+enemy_state_machine = NodePath("../EnemyStateMachine")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+debug_enabled = true
+
+[node name="recalculate" type="Timer" parent="."]
+wait_time = 0.2
+
+[connection signal="body_exited" from="AggroRange" to="EnemyStateMachine/Aggresive" method="_on_aggro_range_body_exited"]
+[connection signal="body_entered" from="AggroStart" to="EnemyStateMachine/Passive" method="_on_aggro_start_body_entered"]

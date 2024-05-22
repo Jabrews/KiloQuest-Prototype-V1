@@ -1,0 +1,86 @@
+[gd_scene load_steps=9 format=3 uid="uid://bl0ctl5rpe128"]
+
+[ext_resource type="Script" path="res://Characters/Rat_V2/Scripts/rat.gd" id="1_aypx2"]
+[ext_resource type="Texture2D" uid="uid://cdihplcxlw21l" path="res://icon.svg" id="1_bjs50"]
+[ext_resource type="Script" path="res://Characters/Enemy Reusable Scripts/EnemyStateMachine.gd" id="2_16cra"]
+[ext_resource type="Script" path="res://Characters/Enemy Reusable Scripts/Damageable.gd" id="3_bao6w"]
+[ext_resource type="Script" path="res://Characters/Rat_V2/Idle.gd" id="4_i1d3h"]
+[ext_resource type="Script" path="res://Characters/Rat_V2/Scripts/Hit.gd" id="5_f6rmp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_txud8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b3xrm"]
+size = Vector2(3, 20)
+
+[node name="Rat_V2" type="CharacterBody2D" node_paths=PackedStringArray("floor_ray", "wall_ray", "attack_hurtbox")]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_aypx2")
+floor_ray = NodePath("FloorRay")
+wall_ray = NodePath("WallRay")
+attack_hurtbox = NodePath("Attack")
+speed = 50
+knockback_distance = 1000
+
+[node name="WallRay" type="RayCast2D" parent="."]
+position = Vector2(-10, 0)
+target_position = Vector2(-4, 0)
+collision_mask = 4
+collide_with_areas = true
+
+[node name="FloorRay" type="RayCast2D" parent="."]
+position = Vector2(-10, 0)
+target_position = Vector2(0, 19)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.153084, 0.171642)
+texture = ExtResource("1_bjs50")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_txud8")
+
+[node name="EnemyStateMachine" type="Node" parent="." node_paths=PackedStringArray("enemy", "current_state")]
+script = ExtResource("2_16cra")
+enemy = NodePath("..")
+current_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("damage_re_apply")]
+script = ExtResource("4_i1d3h")
+damage = 25
+damage_re_apply = NodePath("../../DamageReapply")
+
+[node name="Hit" type="Node" parent="EnemyStateMachine" node_paths=PackedStringArray("return_from_hit_state_timer", "idle_state", "character")]
+script = ExtResource("5_f6rmp")
+return_from_hit_state_timer = NodePath("../../ReturnFromHitStateTimer")
+idle_state = NodePath("../Idle")
+character = NodePath("../..")
+
+[node name="Damageable" type="Node" parent="." node_paths=PackedStringArray("character", "enemy_state_machine", "hit_state")]
+script = ExtResource("3_bao6w")
+character = NodePath("..")
+health = 100
+enemy_state_machine = NodePath("../EnemyStateMachine")
+has_hit_state = true
+hit_state = NodePath("../EnemyStateMachine/Hit")
+has_apply_knockback_function = true
+
+[node name="Movement" type="Node2D" parent="."]
+
+[node name="Attack" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attack"]
+position = Vector2(-11.5, 0)
+shape = SubResource("RectangleShape2D_b3xrm")
+
+[node name="ReturnFromHitStateTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="DamageReapply" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_entered"]
+[connection signal="body_exited" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_exited"]
+[connection signal="timeout" from="ReturnFromHitStateTimer" to="EnemyStateMachine/Hit" method="_on_return_from_hit_state_timer_timeout"]
+[connection signal="timeout" from="DamageReapply" to="EnemyStateMachine/Idle" method="_on_damage_reapply_timeout"]
