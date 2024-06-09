@@ -134,9 +134,10 @@ has_apply_knockback_function = true
 death_particles = ExtResource("7_btwiv")
 queue_free_timer = NodePath("../queue_free_timer2")
 
-[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter")]
+[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter", "knockback_timer")]
 script = ExtResource("7_nar6p")
 charcter = NodePath("..")
+knockback_timer = NodePath("../KnockbackTimer")
 
 [node name="Attack" type="Area2D" parent="."]
 collision_layer = 0
@@ -180,6 +181,9 @@ collide_with_areas = true
 position = Vector2(-28.1607, 0)
 target_position = Vector2(0, 11)
 collision_mask = 4
+
+[node name="KnockbackTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="body_entered" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_entered"]
 [connection signal="body_exited" from="Attack" to="EnemyStateMachine/Idle" method="_on_attack_body_exited"]

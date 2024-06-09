@@ -353,9 +353,10 @@ can_move = true
 StateRefrence = NodePath("../../StateRefrence")
 knockback = NodePath("../../Knockback")
 
-[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter")]
+[node name="Knockback" type="Node" parent="." node_paths=PackedStringArray("charcter", "knockback_timer")]
 script = ExtResource("13_rfqv5")
 charcter = NodePath("..")
+knockback_timer = NodePath("../Timers/CanKnockbackTimer")
 
 [node name="RegAttack" type="Area2D" parent="." node_paths=PackedStringArray("charcter", "knockback")]
 collision_layer = 0
@@ -415,6 +416,9 @@ wait_time = 0.07
 
 [node name="AttackDuriationTimer" type="Timer" parent="Timers"]
 wait_time = 0.3
+one_shot = true
+
+[node name="CanKnockbackTimer" type="Timer" parent="Timers"]
 one_shot = true
 
 [connection signal="body_entered" from="RegAttack" to="RegAttack" method="_on_body_entered"]
